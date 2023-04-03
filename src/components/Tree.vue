@@ -1,15 +1,20 @@
 <script setup>
-import { ref, watch, onMounted, defineExpose } from "vue";
+import { ref, watch, onMounted } from "vue";
 // import ParseTree from "nlptoolkit-parstree";
+import { Tag } from "en-pos";
 import nlp from "compromise";
 
 let pos = ref([]);
 let words = ref([]);
 let chunks = ref([]);
-let clauses = ref([]);
 let sentence = ref("The quick brown fox jumps over the lazy dog");
+let tags = ref([]);
 
 function generateSyntaxTree(sentence) {
+  tags.value = new Tag(sentence.split(" "))
+    .initial() // initial dictionary and pattern based tagging
+    .smooth().tags; // further context based smoothing
+  console.log(tags.value);
   // console.log(sentence(sentence).json());
   const parsed = nlp(sentence);
 
@@ -20,7 +25,7 @@ function generateSyntaxTree(sentence) {
   // console.log(parsed.document);
   pos = parsed.document[0];
 
-  console.log(parsed.chunks().out("array"));
+  // console.log(parsed.chunks().out("array"));
   chunks = parsed.chunks().out("array");
 
   // Generate a tree of constituents based on sentence structure
@@ -71,7 +76,37 @@ onMounted(() => {
     </div>
   </div>
 
-  <div class="flex">
+  <div class="relative flex">
+    <div class="absolute mt-3 -translate-x-[110%] text-neutral-500">
+      lib en-pos
+    </div>
+    <div
+      v-for="(item, i) in tags"
+      class="m-[0.35rem] grid place-items-center rounded-xl py-2 font-mono font-bold"
+      :style="{
+        width: words[i] * 10.8 + 'px !important',
+      }"
+      :class="
+        item.substring(0, 1) == 'V'
+          ? 'bg-red-900 text-red-400'
+          : item.substring(0, 1) == 'N'
+          ? 'bg-emerald-900 text-emerald-400'
+          : item.substring(0, 1) == 'J'
+          ? 'bg-amber-900 text-amber-400'
+          : item.substring(0, 1) == 'P'
+          ? 'bg-blue-900 text-blue-400'
+          : item.substring(0, 1) == 'A'
+          ? 'bg-purple-900 text-purple-400'
+          : 'bg-gray-600 text-gray-400'
+      "
+    >
+      {{ item.substring(0, 1) }}
+    </div>
+  </div>
+  <div class="relative flex">
+    <div class="absolute mt-3 -translate-x-[110%] text-neutral-500">
+      lib compromise
+    </div>
     <div
       v-for="(item, i) in pos"
       class="m-[0.35rem] grid place-items-center rounded-xl py-2 font-mono font-bold"
