@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
 // import ParseTree from "nlptoolkit-parstree";
-import { Tag } from "en-pos";
+// import { Tag } from "en-pos";
 import nlp from "compromise";
 
 let pos = ref([]);
@@ -11,10 +11,10 @@ let sentence = ref("The quick brown fox jumps over the lazy dog");
 let tags = ref([]);
 
 function generateSyntaxTree(sentence) {
-  tags.value = new Tag(sentence.split(" "))
-    .initial() // initial dictionary and pattern based tagging
-    .smooth().tags; // further context based smoothing
-  console.log(tags.value);
+  // tags.value = new Tag(sentence.split(" "))
+  //   .initial() // initial dictionary and pattern based tagging
+  //   .smooth().tags; // further context based smoothing
+  // console.log(tags.value);
   // console.log(sentence(sentence).json());
   const parsed = nlp(sentence);
 
@@ -76,7 +76,7 @@ onMounted(() => {
     </div>
   </div>
 
-  <div class="relative flex">
+  <!-- <div class="relative flex">
     <div class="absolute mt-3 -translate-x-[110%] text-neutral-500">
       lib en-pos
     </div>
@@ -102,7 +102,7 @@ onMounted(() => {
     >
       {{ item.substring(0, 1) }}
     </div>
-  </div>
+  </div> -->
   <div class="relative flex">
     <div class="absolute mt-3 -translate-x-[110%] text-neutral-500">
       lib compromise
