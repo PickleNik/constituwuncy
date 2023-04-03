@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
-// import ParseTree from "nlptoolkit-parstree";
+import ParseTree from "nlptoolkit-parsetree";
 // import { Tag } from "en-pos";
 import nlp from "compromise";
 
@@ -9,6 +9,8 @@ let words = ref([]);
 let chunks = ref([]);
 let sentence = ref("The quick brown fox jumps over the lazy dog");
 let tags = ref([]);
+
+console.warn(ParseTree);
 
 function generateSyntaxTree(sentence) {
   // tags.value = new Tag(sentence.split(" "))
