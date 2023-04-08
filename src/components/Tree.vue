@@ -1,16 +1,15 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import ParseTree from "nlptoolkit-parsetree";
-// import { Tag } from "en-pos";
 import nlp from "compromise";
+// import ParseTree from "nlptoolkit-parsetree";
+// import { Tag } from "en-pos";
+// let tags = ref([]);
 
 let pos = ref([]);
 let words = ref([]);
 let chunks = ref([]);
 let sentence = ref("The quick brown fox jumps over the lazy dog");
-let tags = ref([]);
-
-console.warn(ParseTree);
+let parsedsen = ref();
 
 function generateSyntaxTree(sentence) {
   // tags.value = new Tag(sentence.split(" "))
@@ -19,18 +18,13 @@ function generateSyntaxTree(sentence) {
   // console.log(tags.value);
   // console.log(sentence(sentence).json());
   const parsed = nlp(sentence);
-
-  const root = {
-    label: "Sentence",
-    children: [],
-  };
-  // console.log(parsed.document);
+  // console.log(parsed.html({}));
+  // console.log(parsed.out("tags"));
+  console.log(parsed.debug());
+  console.log(parsed.json());
+  parsedsen = parsed;
   pos = parsed.document[0];
-
-  // console.log(parsed.chunks().out("array"));
   chunks = parsed.chunks().out("array");
-
-  // Generate a tree of constituents based on sentence structure
 }
 
 generateSyntaxTree(sentence.value);
@@ -55,6 +49,9 @@ onMounted(() => {
 </script>
 
 <template>
+  <div class="pointer-events-none fixed right-4 top-4 w-96 text-stone-500">
+    {{ parsedsen.json() }}
+  </div>
   <div
     class="m-[0.35rem] grid place-items-center rounded-xl py-2 text-center font-mono font-bold text-white"
   >
@@ -79,7 +76,7 @@ onMounted(() => {
   </div>
 
   <!-- <div class="relative flex">
-    <div class="absolute mt-3 -translate-x-[110%] text-neutral-500">
+    <div class="absolute mt-3 -translate-x-[110%] text-stone-500">
       lib en-pos
     </div>
     <div
@@ -105,8 +102,8 @@ onMounted(() => {
       {{ item.substring(0, 1) }}
     </div>
   </div> -->
-  <div class="relative flex">
-    <div class="absolute mt-3 -translate-x-[110%] text-neutral-500">
+  <div class="relative flex whitespace-nowrap">
+    <div class="absolute mt-3 -translate-x-[110%] text-stone-500">
       lib compromise
     </div>
     <div
